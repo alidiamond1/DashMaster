@@ -2,12 +2,14 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useEffect } from 'react';
 import { supabase } from './services/supabase';
 import useAuthStore from './store/authStore';
+import PrivateRoute from './components/PrivateRoute';
 
 // Auth Pages
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import UpdatePassword from './pages/auth/UpdatePassword';
+import Dashboard from './pages/dashboard/Dashboard';
 
 const App = () => {
   const { setUser, setSession, setLoading } = useAuthStore();
@@ -44,6 +46,13 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<UpdatePassword />} />
+
+        {/* Dashboard Route */}
+        <Route path="/dashboard" element={
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        } />
 
         {/* Redirect root to login for now */}
         <Route path="/" element={<Navigate to="/login" replace />} />
