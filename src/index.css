@@ -6,21 +6,21 @@
 
 @layer base {
   body {
-    @apply bg-background-light dark:bg-background-dark text-text-dark dark:text-text-light;
+    @apply bg-gray-100;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply px-4 py-2 bg-primary text-white rounded-lg hover:bg-opacity-90 transition-all duration-200;
+    @apply px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700;
   }
   
   .card {
-    @apply bg-white dark:bg-background-dark p-6 rounded-xl shadow-lg;
+    @apply bg-white p-6 rounded-lg shadow-md;
   }
 
   .input-field {
-    @apply w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-800 dark:text-white;
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent;
   }
 }
 
