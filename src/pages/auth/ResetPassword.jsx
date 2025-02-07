@@ -1,29 +1,35 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import useAuthStore from '../../store/authStore';
 
-const Login = () => {
+const ResetPassword = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const login = useAuthStore((state) => state.login);
-  const navigate = useNavigate();
+  const resetPassword = useAuthStore((state) => state.resetPassword);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
+    setSuccess(false);
 
-    const { error } = await login(email, password);
-    
-    if (error) {
-      setError(error.message);
+    try {
+      const { error } = await resetPassword(email);
+      
+      if (error) {
+        setError(error.message);
+        setIsLoading(false);
+        return;
+      }
+
+      setSuccess(true);
       setIsLoading(false);
-      return;
+    } catch (err) {
+      setError(err.message || 'An error occurred while sending reset instructions');
+      setIsLoading(false);
     }
-
-    navigate('/dashboard');
   };
 
   return (
@@ -31,10 +37,10 @@ const Login = () => {
       <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900">
-            Welcome Back
+            Reset Password
           </h2>
           <p className="mt-2 text-gray-600">
-            Sign in to your account
+            Enter your email address and we'll send you instructions to reset your password.
           </p>
         </div>
 
@@ -42,6 +48,12 @@ const Login = () => {
           {error && (
             <div className="bg-red-100 text-red-700 p-3 rounded-lg text-sm">
               {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="bg-green-100 text-green-700 p-3 rounded-lg text-sm">
+              Password reset instructions have been sent to your email address. Please check your inbox.
             </div>
           )}
 
@@ -55,40 +67,8 @@ const Login = () => {
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
             />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              type="password"
-              required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-blue-600 border-gray-300 rounded"
-              />
-              <label htmlFor="remember-me" className="ml-2 text-sm text-gray-700">
-                Remember me
-              </label>
-            </div>
-
-            <Link
-              to="/forgot-password"
-              className="text-sm text-blue-600 hover:text-blue-500"
-            >
-              Forgot password?
-            </Link>
           </div>
 
           <button
@@ -96,10 +76,19 @@ const Login = () => {
             disabled={isLoading}
             className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isLoading ? 'Signing in...' : 'Sign in'}
+            {isLoading ? 'Sending Instructions...' : 'Send Reset Instructions'}
           </button>
 
           <div className="text-center mt-4">
+            <p className="text-sm text-gray-600">
+              Remember your password?{' '}
+              <Link to="/login" className="text-blue-600 hover:text-blue-500">
+                Sign in
+              </Link>
+            </p>
+          </div>
+
+          <div className="text-center">
             <p className="text-sm text-gray-600">
               Don't have an account?{' '}
               <Link to="/register" className="text-blue-600 hover:text-blue-500">
@@ -113,4 +102,4 @@ const Login = () => {
   );
 };
 
-export default Login; 
+export default ResetPassword; 

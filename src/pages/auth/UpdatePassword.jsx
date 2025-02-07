@@ -1,17 +1,25 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import useAuthStore from '../../store/authStore';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../../services/supabase';
 
-const Register = () => {
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
+const UpdatePassword = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const register = useAuthStore((state) => state.register);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if we have a session when the component mounts
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        navigate('/login');
+      }
+    };
+    checkSession();
+  }, [navigate]);
 
   const validatePassword = (password) => {
     if (password.length < 6) {
@@ -42,12 +50,12 @@ const Register = () => {
     }
 
     try {
-      const { error } = await register(email, password, fullName);
-      
+      const { error } = await supabase.auth.updateUser({
+        password: password
+      });
+
       if (error) {
-        setError(error.message);
-        setIsLoading(false);
-        return;
+        throw error;
       }
 
       setSuccess(true);
@@ -56,7 +64,8 @@ const Register = () => {
         navigate('/login');
       }, 2000);
     } catch (err) {
-      setError(err.message || 'An error occurred during registration');
+      setError(err.message || 'An error occurred while updating your password');
+    } finally {
       setIsLoading(false);
     }
   };
@@ -66,10 +75,10 @@ const Register = () => {
       <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900">
-            Create an Account
+            Set New Password
           </h2>
           <p className="mt-2 text-gray-600">
-            Join us and start managing your business
+            Please enter your new password below
           </p>
         </div>
 
@@ -82,39 +91,13 @@ const Register = () => {
 
           {success && (
             <div className="bg-green-100 text-green-700 p-3 rounded-lg text-sm">
-              Registration successful! Redirecting to login...
+              Password updated successfully! Redirecting to login...
             </div>
           )}
 
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Full Name
-            </label>
-            <input
-              type="text"
-              required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Email address
-            </label>
-            <input
-              type="email"
-              required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Password
+              New Password
             </label>
             <input
               type="password"
@@ -122,12 +105,16 @@ const Register = () => {
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
             />
+            <p className="mt-1 text-sm text-gray-500">
+              Minimum 6 characters
+            </p>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Confirm Password
+              Confirm New Password
             </label>
             <input
               type="password"
@@ -135,29 +122,21 @@ const Register = () => {
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="••••••••"
             />
           </div>
 
           <button
             type="submit"
-            disabled={isLoading}
-            className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            disabled={isLoading || success}
+            className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isLoading ? 'Creating account...' : 'Sign up'}
+            {isLoading ? 'Updating Password...' : 'Update Password'}
           </button>
-
-          <div className="text-center mt-4">
-            <p className="text-sm text-gray-600">
-              Already have an account?{' '}
-              <Link to="/login" className="text-blue-600 hover:text-blue-500">
-                Sign in
-              </Link>
-            </p>
-          </div>
         </form>
       </div>
     </div>
   );
 };
 
-export default Register; 
+export default UpdatePassword; 

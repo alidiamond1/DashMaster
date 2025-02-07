@@ -20,6 +20,7 @@ const useAuthStore = create((set) => ({
       set({ user: data.user, session: data.session });
       return { data, error: null };
     } catch (error) {
+      console.error('Login error:', error);
       return { data: null, error };
     }
   },
@@ -38,6 +39,7 @@ const useAuthStore = create((set) => ({
       if (error) throw error;
       return { data, error: null };
     } catch (error) {
+      console.error('Registration error:', error);
       return { data: null, error };
     }
   },
@@ -49,16 +51,33 @@ const useAuthStore = create((set) => ({
       set({ user: null, session: null });
       return { error: null };
     } catch (error) {
+      console.error('Logout error:', error);
       return { error };
     }
   },
 
   resetPassword: async (email) => {
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '/reset-password',
+      });
       if (error) throw error;
       return { error: null };
     } catch (error) {
+      console.error('Reset password error:', error);
+      return { error };
+    }
+  },
+
+  updatePassword: async (newPassword) => {
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword
+      });
+      if (error) throw error;
+      return { error: null };
+    } catch (error) {
+      console.error('Update password error:', error);
       return { error };
     }
   },
