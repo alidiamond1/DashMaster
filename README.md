@@ -12,7 +12,6 @@ A sleek, modern, and highly interactive Admin Dashboard built with React + Vite 
   * Password Reset Flow
   * Session Management
 * 📊 Interactive Charts and Graphs
-* 👥 User Management (Coming Soon)
 * 📦 Product Management (Coming Soon)
 * 🛍️ Order Management (Coming Soon)
 * 📈 Analytics & Reports (Coming Soon)
