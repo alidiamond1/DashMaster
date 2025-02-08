@@ -15,7 +15,6 @@ const DashboardLayout = ({ children }) => {
 
   const menuItems = [
     { icon: '📊', label: 'Dashboard', path: '/dashboard' },
-    { icon: '👥', label: 'Users', path: '/dashboard/users' },
     { icon: '📦', label: 'Products', path: '/dashboard/products' },
     { icon: '🛍️', label: 'Orders', path: '/dashboard/orders' },
     { icon: '📈', label: 'Analytics', path: '/dashboard/analytics' },
