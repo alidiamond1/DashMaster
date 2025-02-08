@@ -1,4 +1,16 @@
 import DashboardLayout from '../../layouts/DashboardLayout';
+import {
+  LineChart,
+  Line,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend
+} from 'recharts';
 
 const StatCard = ({ title, value, icon, trend }) => (
   <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
@@ -33,6 +45,26 @@ const Dashboard = () => {
     { id: '4', customer: 'Alice Brown', amount: '$150', status: 'Completed', date: '2024-02-06' },
   ];
 
+  // Revenue data for the line chart
+  const revenueData = [
+    { month: 'Jan', revenue: 12000, orders: 220 },
+    { month: 'Feb', revenue: 19000, orders: 380 },
+    { month: 'Mar', revenue: 15000, orders: 340 },
+    { month: 'Apr', revenue: 22000, orders: 420 },
+    { month: 'May', revenue: 18000, orders: 390 },
+    { month: 'Jun', revenue: 25000, orders: 480 },
+    { month: 'Jul', revenue: 32000, orders: 560 },
+  ];
+
+  // Sales data for the area chart
+  const salesData = [
+    { name: 'Week 1', online: 4000, offline: 2400 },
+    { name: 'Week 2', online: 3000, offline: 1398 },
+    { name: 'Week 3', online: 2000, offline: 9800 },
+    { name: 'Week 4', online: 2780, offline: 3908 },
+    { name: 'Week 5', online: 1890, offline: 4800 },
+  ];
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -58,14 +90,68 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue Overview</h3>
-            <div className="h-64 flex items-center justify-center bg-gray-50 rounded">
-              Chart Coming Soon
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={revenueData}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis yAxisId="left" />
+                  <YAxis yAxisId="right" orientation="right" />
+                  <Tooltip />
+                  <Legend />
+                  <Line
+                    yAxisId="left"
+                    type="monotone"
+                    dataKey="revenue"
+                    stroke="#4F46E5"
+                    activeDot={{ r: 8 }}
+                    name="Revenue ($)"
+                  />
+                  <Line
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="orders"
+                    stroke="#22C55E"
+                    name="Orders"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Sales Analytics</h3>
-            <div className="h-64 flex items-center justify-center bg-gray-50 rounded">
-              Chart Coming Soon
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart
+                  data={salesData}
+                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Area
+                    type="monotone"
+                    dataKey="online"
+                    stackId="1"
+                    stroke="#4F46E5"
+                    fill="#4F46E5"
+                    name="Online Sales"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="offline"
+                    stackId="1"
+                    stroke="#22C55E"
+                    fill="#22C55E"
+                    name="Offline Sales"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>
