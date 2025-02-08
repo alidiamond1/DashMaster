@@ -11,7 +11,7 @@ A sleek, modern, and highly interactive Admin Dashboard built with React + Vite 
   * User Registration
   * Password Reset Flow
   * Session Management
-* 📊 Interactive Charts and Graphs (Coming Soon)
+* 📊 Interactive Charts and Graphs
 * 👥 User Management (Coming Soon)
 * 📦 Product Management (Coming Soon)
 * 🛍️ Order Management (Coming Soon)
@@ -26,7 +26,7 @@ A sleek, modern, and highly interactive Admin Dashboard built with React + Vite 
 * **State Management:** Zustand
 * **Authentication:** Supabase Auth
 * **Form Handling:** React Hook Form (Coming Soon)
-* **Data Visualization:** Recharts (Coming Soon)
+* **Data Visualization:** Recharts 
 * **Animations:** Framer Motion (Coming Soon)
 * **API Client:** Axios (Coming Soon)
 
